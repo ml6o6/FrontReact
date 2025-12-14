@@ -1,0 +1,77 @@
+.tech-card {
+  width: 100%;
+  text-align: left;
+  appearance: none;
+  border: 1px solid #e7e7ee;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px 16px 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tech-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.tech-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.tech-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #1f2430;
+}
+
+.tech-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f3f4f8;
+  color: #2a2f3a;
+  white-space: nowrap;
+}
+
+.tech-card__description {
+  margin: 0;
+  color: #4a5161;
+  line-height: 1.45;
+}
+
+.tech-card__footer {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #697086;
+  font-size: 0.85rem;
+}
+
+.tech-card__category {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef0f6;
+  color: #3b4150;
+}
+
+/* статусные акценты */
+.tech-card--not-started {
+  border-left: 6px solid #ff6b6b;
+}
+.tech-card--in-progress {
+  border-left: 6px solid #4ecdc4;
+}
+.tech-card--completed {
+  border-left: 6px solid #45b7d1;
+}

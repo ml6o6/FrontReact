@@ -1,0 +1,23 @@
+.detail-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.status-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.status-buttons .btn.active {
+  background: #f2f4ff;
+  border-color: #d9ddff;
+}
+
+.meta-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #697086;
+  font-size: 0.95rem;
+}

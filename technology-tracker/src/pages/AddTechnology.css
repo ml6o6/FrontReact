@@ -1,0 +1,10 @@
+.add-form {
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+}
+
+.add-form textarea {
+  resize: vertical;
+  min-height: 90px;
+}

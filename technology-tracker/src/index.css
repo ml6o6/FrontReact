@@ -1,0 +1,20 @@
+:root {
+  color-scheme: light;
+}
+
+/* Fix: чтобы элементы с width:100% не вылезали из контейнеров */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f6f7fb;
+}

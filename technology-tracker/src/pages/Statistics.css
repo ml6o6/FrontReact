@@ -1,0 +1,35 @@
+.chart {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.chart-item {
+  border: 1px solid #e7e7ee;
+  border-radius: 16px;
+  padding: 12px;
+  background: #fff;
+}
+
+.chart-bar {
+  height: 140px;
+  border-radius: 14px;
+  border: 1px solid #e7e7ee;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.chart-bar__fill {
+  width: 100%;
+  background: #2a54ff;
+  transition: height 250ms ease-in-out;
+}
+
+.chart-meta {
+  display: flex;
+  justify-content: space-between;
+  color: #697086;
+  margin-top: 8px;
+}

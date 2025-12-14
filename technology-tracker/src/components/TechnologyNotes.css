@@ -1,0 +1,36 @@
+.notes-section {
+  background: #ffffff;
+  border: 1px solid #e7e7ee;
+  border-radius: 14px;
+  padding: 12px 12px 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.notes-section__title {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: #1f2430;
+}
+
+.notes-section__textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e7e7ee;
+  border-radius: 12px;
+  padding: 10px 10px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.notes-section__textarea:focus {
+  border-color: rgba(77, 171, 247, 0.8);
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.25);
+}
+
+.notes-section__hint {
+  margin-top: 8px;
+  color: #697086;
+  font-size: 0.85rem;
+}

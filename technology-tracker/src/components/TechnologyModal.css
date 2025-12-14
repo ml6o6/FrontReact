@@ -1,0 +1,76 @@
+.tech-modal__desc {
+  margin: 0 0 12px;
+  color: #4a5161;
+  line-height: 1.45;
+}
+
+.tech-modal__row {
+  display: flex;
+  gap: 10px;
+  margin: 6px 0;
+  color: #3b4150;
+}
+
+.tech-modal__label {
+  min-width: 92px;
+  color: #697086;
+}
+
+.tech-modal__value {
+  font-weight: 600;
+}
+
+.tech-modal__controls {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.tech-modal__control {
+  display: grid;
+  gap: 6px;
+  color: #3b4150;
+  font-weight: 600;
+}
+
+.tech-modal__control span {
+  font-weight: 600;
+}
+
+.tech-modal__control select,
+.tech-modal__control textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #e7e7ee;
+  border-radius: 12px;
+  padding: 10px 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+}
+
+.tech-modal__control select:focus,
+.tech-modal__control textarea:focus {
+  border-color: rgba(77, 171, 247, 0.8);
+  box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.25);
+}
+
+.tech-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn {
+  border: 1px solid #e7e7ee;
+  background: #f6f7fb;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
