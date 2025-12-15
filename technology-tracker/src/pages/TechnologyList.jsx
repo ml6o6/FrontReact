@@ -4,16 +4,25 @@ import TechnologyCard from "../components/TechnologyCard";
 import QuickActions from "../components/QuickActions";
 import ProgressBar from "../components/ProgressBar";
 
+// ВАЖНО: “другой человек” сделал RoadmapImporter с пропсом onImport
+import RoadmapImporter from "../components/RoadmapImporter.jsx";
+
 export default function TechnologyList({
   technologies,
   progress,
   onMarkAllCompleted,
   onResetAll,
+
+  // Практика 24 (данные из API + импорт)
+  onImportAdd,
+  loading,
+  error,
+  onRetry,
 }) {
   const navigate = useNavigate();
 
   const openTech = (tech) => {
-    navigate(`/technology/${tech.id}`);
+    navigate(`/technology/${tech.id ?? tech._id}`);
   };
 
   return (
@@ -35,6 +44,23 @@ export default function TechnologyList({
         <ProgressBar progress={progress} label="Общий прогресс" animated />
       </div>
 
+      {loading && <p>Загрузка...</p>}
+
+      {error && (
+        <div className="page-card" style={{ marginBottom: 12 }}>
+          <p style={{ margin: 0, color: "crimson" }}>Ошибка: {error}</p>
+          <button className="btn" onClick={onRetry} style={{ marginTop: 8 }}>
+            Повторить
+          </button>
+        </div>
+      )}
+
+      {/* Импорт дорожных карт (шаблоны), как у другого человека:
+          RoadmapImporter вызывает onImport(tech) :contentReference[oaicite:2]{index=2} */}
+      <div className="page-card" style={{ marginBottom: 12 }}>
+        <RoadmapImporter onImport={onImportAdd} />
+      </div>
+
       <QuickActions
         onMarkAllCompleted={onMarkAllCompleted}
         onResetAll={onResetAll}
@@ -44,11 +70,15 @@ export default function TechnologyList({
       <main style={{ marginTop: 12 }}>
         <div className="technologies-grid">
           {technologies.map((tech) => (
-            <TechnologyCard key={tech.id} technology={tech} onOpen={openTech} />
+            <TechnologyCard
+              key={tech.id ?? tech._id}
+              technology={tech}
+              onOpen={openTech}
+            />
           ))}
         </div>
 
-        {technologies.length === 0 ? (
+        {!loading && technologies.length === 0 ? (
           <div className="page-card" style={{ marginTop: 12 }}>
             <p style={{ margin: 0 }}>Технологий пока нет.</p>
           </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 
-import useTechnologies from "./hooks/useTechnologies";
+import useTechnologiesApi from "./hooks/useTechnologiesApi.js";
 
 import Navigation from "./components/Navigation";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -17,18 +17,19 @@ import AddTechnology from "./pages/AddTechnology";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
+  // Данные теперь из useTechnologiesApi (как у “другого человека”)
   const {
     technologies,
-    updateStatus,
-    updateNotes,
+    loading,
+    error,
+    refetch,
     addTechnology,
-    markAllCompleted,
-    resetAllStatuses,
-    clearAllNotes,
-    resetToInitial,
-    progress,
-  } = useTechnologies();
+    updateTechnology,
+    deleteTechnology,
+    setTechnologies,
+  } = useTechnologiesApi();
 
+  // --- auth ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
 
@@ -51,6 +52,75 @@ export default function App() {
     setUsername("");
   };
 
+  // --- адаптеры под твои страницы (TechnologyDetail/Settings) ---
+  const onStatusChange = async (techId, value) => {
+    // value может быть boolean/number/string — приводим к status/progress
+    let updates = {};
+
+    if (typeof value === "boolean") {
+      updates.status = value ? "completed" : "not-started";
+      updates.progress = value ? 100 : 0;
+    } else if (typeof value === "number") {
+      updates.progress = value;
+      updates.status =
+        value >= 100 ? "completed" : value > 0 ? "in-progress" : "not-started";
+    } else if (typeof value === "string") {
+      updates.status = value;
+      updates.progress =
+        value === "completed" ? 100 : value === "in-progress" ? 50 : 0;
+    }
+
+    try {
+      await updateTechnology(techId, updates);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onNotesChange = async (techId, notes) => {
+    try {
+      await updateTechnology(techId, { notes });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const markAllCompleted = () => {
+    setTechnologies((prev) =>
+      prev.map((t) => ({
+        ...t,
+        status: "completed",
+        progress: 100,
+      }))
+    );
+  };
+
+  const resetAllStatuses = () => {
+    setTechnologies((prev) =>
+      prev.map((t) => ({
+        ...t,
+        status: "not-started",
+        progress: 0,
+      }))
+    );
+  };
+
+  const clearAllNotes = () => {
+    setTechnologies((prev) => prev.map((t) => ({ ...t, notes: "" })));
+  };
+
+  const resetToInitial = () => {
+    // заново “подтянуть” технологии (как refetch в примере)
+    refetch();
+  };
+
+  // --- прогресс (процент выполненных) ---
+  const total = technologies.length;
+  const completed = technologies.filter(
+    (t) => t?.status === "completed" || (t?.progress ?? 0) >= 100
+  ).length;
+  const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
+
   return (
     <div className="app">
       <Navigation
@@ -60,12 +130,19 @@ export default function App() {
       />
 
       <Routes>
-        <Route path="/" element={<Home technologies={technologies} isLoggedIn={isLoggedIn} />} />
+        <Route
+          path="/"
+          element={<Home technologies={technologies} isLoggedIn={isLoggedIn} />}
+        />
 
         <Route
           path="/login"
           element={
-            isLoggedIn ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />
+            isLoggedIn ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
           }
         />
 
@@ -78,6 +155,10 @@ export default function App() {
                 progress={progress}
                 onMarkAllCompleted={markAllCompleted}
                 onResetAll={resetAllStatuses}
+                onImportAdd={addTechnology}
+                loading={loading}
+                error={error}
+                onRetry={refetch}
               />
             </ProtectedRoute>
           }
@@ -89,8 +170,9 @@ export default function App() {
             <ProtectedRoute isLoggedIn={isLoggedIn}>
               <TechnologyDetail
                 technologies={technologies}
-                onStatusChange={updateStatus}
-                onNotesChange={updateNotes}
+                onStatusChange={onStatusChange}
+                onNotesChange={onNotesChange}
+                onDelete={deleteTechnology}
               />
             </ProtectedRoute>
           }
