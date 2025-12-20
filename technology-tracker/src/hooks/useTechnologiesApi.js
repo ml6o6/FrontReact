@@ -13,6 +13,9 @@ const initialTechnologies = [
     notes: "",
     category: "frontend",
     resources: [],
+
+    difficulty: "beginner",
+    deadline: "",
   },
   {
     id: 2,
@@ -22,6 +25,9 @@ const initialTechnologies = [
     notes: "",
     category: "backend",
     resources: [],
+
+    difficulty: "beginner",
+    deadline: "",
   },
   {
     id: 3,
@@ -31,6 +37,9 @@ const initialTechnologies = [
     notes: "",
     category: "database",
     resources: [],
+
+    difficulty: "beginner",
+    deadline: "",
   },
   {
     id: 4,
@@ -98,6 +107,7 @@ export default function useTechnologiesApi() {
   const refetch = async () => {
     setLoading(false);
     setError(null);
+    setTechnologies(initialTechnologies);
   };
 
   // Добавление технологии (страница AddTechnology и импорт)
@@ -114,6 +124,8 @@ export default function useTechnologiesApi() {
         status: techData?.status ?? "not-started",
         notes: techData?.notes ?? "",
         resources: Array.isArray(techData?.resources) ? techData.resources : [],
+        difficulty: techData?.difficulty ?? "beginner",
+        deadline: techData?.deadline ?? "",
         apiSource: techData?.apiSource,
         apiId: techData?.apiId,
         createdAt: new Date().toISOString(),
@@ -270,6 +282,11 @@ export default function useTechnologiesApi() {
     }));
   };
 
+  const removeDummyImported = () => {
+    setTechnologies((prev) =>
+      (prev || []).filter((t) => t.apiSource !== "dummyjson")
+    );
+  };
   return {
     technologies,
     setTechnologies,
@@ -282,5 +299,6 @@ export default function useTechnologiesApi() {
     deleteTechnology,
     loadAdditionalResources,
     searchByQueryGitHub,
+    removeDummyImported,
   };
 }
