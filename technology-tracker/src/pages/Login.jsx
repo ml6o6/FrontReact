@@ -11,7 +11,6 @@ export default function Login({ onLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Учебная авторизация как в методичке
     if (username === "admin" && password === "password") {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("username", username);

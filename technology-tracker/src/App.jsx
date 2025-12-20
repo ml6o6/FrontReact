@@ -17,19 +17,19 @@ import AddTechnology from "./pages/AddTechnology";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
-  // Данные теперь из useTechnologiesApi (как у “другого человека”)
   const {
     technologies,
     loading,
     error,
     refetch,
+    searchByQueryGitHub,
+    loadAdditionalResources,
     addTechnology,
     updateTechnology,
     deleteTechnology,
     setTechnologies,
   } = useTechnologiesApi();
 
-  // --- auth ---
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
 
@@ -52,9 +52,7 @@ export default function App() {
     setUsername("");
   };
 
-  // --- адаптеры под твои страницы (TechnologyDetail/Settings) ---
   const onStatusChange = async (techId, value) => {
-    // value может быть boolean/number/string — приводим к status/progress
     let updates = {};
 
     if (typeof value === "boolean") {
@@ -110,11 +108,10 @@ export default function App() {
   };
 
   const resetToInitial = () => {
-    // заново “подтянуть” технологии (как refetch в примере)
     refetch();
   };
 
-  // --- прогресс (процент выполненных) ---
+  // прогресс
   const total = technologies.length;
   const completed = technologies.filter(
     (t) => t?.status === "completed" || (t?.progress ?? 0) >= 100
@@ -156,6 +153,7 @@ export default function App() {
                 onMarkAllCompleted={markAllCompleted}
                 onResetAll={resetAllStatuses}
                 onImportAdd={addTechnology}
+                onSearch={searchByQueryGitHub}
                 loading={loading}
                 error={error}
                 onRetry={refetch}
@@ -173,6 +171,7 @@ export default function App() {
                 onStatusChange={onStatusChange}
                 onNotesChange={onNotesChange}
                 onDelete={deleteTechnology}
+                onLoadResources={loadAdditionalResources}
               />
             </ProtectedRoute>
           }

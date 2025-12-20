@@ -1,6 +1,5 @@
 import "./Modal.css";
 
-// Простой переиспользуемый компонент модального окна
 export default function Modal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
 

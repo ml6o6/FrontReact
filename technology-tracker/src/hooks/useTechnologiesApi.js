@@ -1,227 +1,286 @@
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
+import useLocalStorage from "./useLocalStorage";
 
-const TECH_API_URL = "https://api.github.com/search/repositories?q=topic:";
+const DUMMY_PRODUCTS_URL = "https://dummyjson.com/products";
+const DUMMY_SEARCH_URL = "https://dummyjson.com/products/search?q=";
 
-function useTechnologiesApi() {
-  const [technologies, setTechnologies] = useState([]);
-  const [loading, setLoading] = useState(true);
+const initialTechnologies = [
+  {
+    id: 1,
+    title: "React Components",
+    description: "Изучение базовых компонентов",
+    status: "not-started",
+    notes: "",
+    category: "frontend",
+    resources: [],
+  },
+  {
+    id: 2,
+    title: "Node.js Basics",
+    description: "Основы серверного JavaScript",
+    status: "not-started",
+    notes: "",
+    category: "backend",
+    resources: [],
+  },
+  {
+    id: 3,
+    title: "PostgreSQL",
+    description: "Запросы и проектирование базы данных",
+    status: "not-started",
+    notes: "",
+    category: "database",
+    resources: [],
+  },
+  {
+    id: 4,
+    title: "Express.js",
+    description: "Роутинг, middleware, REST API",
+    status: "not-started",
+    notes: "",
+    category: "backend",
+    resources: [],
+  },
+  {
+    id: 5,
+    title: "HTML & CSS",
+    description: "Верстка, адаптивность, стили",
+    status: "not-started",
+    notes: "",
+    category: "frontend",
+    resources: [],
+  },
+  {
+    id: 6,
+    title: "React State",
+    description: "useState, производные данные, ререндеры",
+    status: "not-started",
+    notes: "",
+    category: "frontend",
+    resources: [],
+  },
+];
+
+function calculateProgress(list) {
+  if (!Array.isArray(list) || list.length === 0) return 0;
+  const done = list.filter((t) => t.status === "completed").length;
+  return Math.round((done / list.length) * 100);
+}
+
+function normalizeFromDummyProduct(p) {
+  return {
+    id: p?.id,
+    title: p?.title ?? "Без названия",
+    description: p?.description ?? "",
+    status: "not-started",
+    notes: "",
+    category: "imported",
+    apiSource: "dummyjson",
+    apiId: p?.id,
+    resources: Array.isArray(p?.images) ? p.images : [],
+  };
+}
+
+export default function useTechnologiesApi() {
+  const [technologies, setTechnologies] = useLocalStorage(
+    "technologies",
+    initialTechnologies
+  );
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const searchTechnologies = async (
-    techNames = ["react", "node", "python", "javascript"]
-  ) => {
-    try {
-      setLoading(true);
-      setError(null);
+  const progress = useMemo(
+    () => calculateProgress(technologies),
+    [technologies]
+  );
 
-      const technologiesData = [];
-
-      for (const techName of techNames) {
-        try {
-          const response = await fetch(
-            `${TECH_API_URL}${techName}&sort=stars&per_page=1`
-          );
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const data = await response.json();
-
-          if (data.items && data.items.length > 0) {
-            const repo = data.items[0];
-            technologiesData.push({
-              id: repo.id,
-              title: techName.charAt(0).toUpperCase() + techName.slice(1),
-              description:
-                repo.description || `Информация о технологии ${techName}`,
-              category: getCategoryByTech(techName),
-              status: "not-started",
-              progress: 0,
-              notes: "",
-              githubUrl: repo.html_url,
-              stars: repo.stargazers_count,
-              language: repo.language,
-            });
-          }
-        } catch (err) {
-          console.warn(`Не удалось загрузить данные для ${techName}:`, err);
-        }
-      }
-
-      if (technologiesData.length === 0) {
-        setTechnologies(getMockTechnologies());
-      } else {
-        setTechnologies(technologiesData);
-      }
-    } catch (err) {
-      setError("Не удалось загрузить технологии из API");
-      console.error("Ошибка загрузки:", err);
-      setTechnologies(getMockTechnologies());
-    } finally {
-      setLoading(false);
-    }
+  const refetch = async () => {
+    setLoading(false);
+    setError(null);
   };
 
-  const getCategoryByTech = (techName) => {
-    const categories = {
-      react: "frontend",
-      vue: "frontend",
-      angular: "frontend",
-      javascript: "frontend",
-      typescript: "frontend",
-      node: "backend",
-      python: "backend",
-      java: "backend",
-      go: "backend",
-      mysql: "database",
-      mongodb: "database",
-      postgresql: "database",
-      docker: "devops",
-      kubernetes: "devops",
-      aws: "devops",
-    };
-
-    return categories[techName] || "other";
-  };
-
-  const getMockTechnologies = () => [
-    {
-      id: 1,
-      title: "React",
-      description: "Библиотека для создания пользовательских интерфейсов",
-      category: "frontend",
-      status: "not-started",
-      progress: 0,
-      notes: "",
-      githubUrl: "https://github.com/facebook/react",
-      stars: 217000,
-      language: "JavaScript",
-    },
-    {
-      id: 2,
-      title: "Node.js",
-      description: "Среда выполнения JavaScript на сервере",
-      category: "backend",
-      status: "not-started",
-      progress: 0,
-      notes: "",
-      githubUrl: "https://github.com/nodejs/node",
-      stars: 101000,
-      language: "JavaScript",
-    },
-    {
-      id: 3,
-      title: "TypeScript",
-      description: "Типизированное надмножество JavaScript",
-      category: "language",
-      status: "not-started",
-      progress: 0,
-      notes: "",
-      githubUrl: "https://github.com/microsoft/TypeScript",
-      stars: 95000,
-      language: "TypeScript",
-    },
-    {
-      id: 4,
-      title: "Python",
-      description: "Высокоуровневый язык программирования",
-      category: "backend",
-      status: "not-started",
-      progress: 0,
-      notes: "",
-      githubUrl: "https://github.com/python/cpython",
-      stars: 59000,
-      language: "Python",
-    },
-    {
-      id: 5,
-      title: "MongoDB",
-      description: "Документоориентированная система управления базами данных",
-      category: "database",
-      status: "not-started",
-      progress: 0,
-      notes: "",
-      githubUrl: "https://github.com/mongodb/mongo",
-      stars: 25000,
-      language: "C++",
-    },
-  ];
-
+  // Добавление технологии (страница AddTechnology и импорт)
   const addTechnology = async (techData) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
+      const safe = {
+        title:
+          String(techData?.title ?? techData?.name ?? "").trim() ||
+          "Без названия",
+        description: String(techData?.description ?? "").trim(),
+        category: String(techData?.category ?? "other").trim() || "other",
+        status: techData?.status ?? "not-started",
+        notes: techData?.notes ?? "",
+        resources: Array.isArray(techData?.resources) ? techData.resources : [],
+        apiSource: techData?.apiSource,
+        apiId: techData?.apiId,
+        createdAt: new Date().toISOString(),
+      };
 
       const newTech = {
-        id: Date.now(),
-        ...techData,
-        createdAt: new Date().toISOString(),
+        id: Date.now() + Math.floor(Math.random() * 10000),
+        ...safe,
         progress:
-          techData.status === "completed"
+          safe.status === "completed"
             ? 100
-            : techData.status === "in-progress"
+            : safe.status === "in-progress"
             ? 50
             : 0,
       };
 
-      setTechnologies((prev) => [...prev, newTech]);
+      setTechnologies((prev) => [...(prev || []), newTech]);
       return newTech;
-    } catch (err) {
+    } catch (e) {
+      console.error(e);
       throw new Error("Не удалось добавить технологию");
     }
   };
 
   const updateTechnology = async (techId, updates) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
+      await new Promise((resolve) => setTimeout(resolve, 80));
       setTechnologies((prev) =>
-        prev.map((tech) =>
+        (prev || []).map((tech) =>
           tech.id === techId
             ? {
                 ...tech,
                 ...updates,
                 progress:
-                  updates.status === "completed"
-                    ? 100
-                    : updates.status === "in-progress"
-                    ? 50
-                    : updates.progress !== undefined
+                  typeof updates?.progress === "number"
                     ? updates.progress
-                    : tech.progress,
+                    : updates?.status === "completed"
+                    ? 100
+                    : updates?.status === "in-progress"
+                    ? 50
+                    : tech.progress ?? 0,
               }
             : tech
         )
       );
-    } catch (err) {
+    } catch (e) {
+      console.error(e);
       throw new Error("Не удалось обновить технологию");
     }
   };
 
   const deleteTechnology = async (techId) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      setTechnologies((prev) => prev.filter((tech) => tech.id !== techId));
-    } catch (err) {
+      await new Promise((resolve) => setTimeout(resolve, 80));
+      setTechnologies((prev) => (prev || []).filter((t) => t.id !== techId));
+    } catch (e) {
+      console.error(e);
       throw new Error("Не удалось удалить технологию");
     }
   };
 
-  useEffect(() => {
-    searchTechnologies();
-  }, []);
+  const searchByQuery = async (query, signal) => {
+    const q = String(query || "").trim();
+    if (!q) return [];
+
+    const res = await fetch(
+      `${DUMMY_SEARCH_URL}${encodeURIComponent(q)}&limit=12`,
+      { signal }
+    );
+
+    if (!res.ok) {
+      throw new Error("Ошибка: не удалось выполнить поиск по API");
+    }
+
+    const data = await res.json();
+    const products = Array.isArray(data?.products) ? data.products : [];
+    return products.map(normalizeFromDummyProduct);
+  };
+
+  const loadAdditionalResources = async (techId) => {
+    const tech = (technologies || []).find((t) => t.id === techId);
+    if (!tech) return;
+
+    try {
+      let product = null;
+
+      if (tech.apiSource === "dummyjson" && tech.apiId) {
+        const res = await fetch(`${DUMMY_PRODUCTS_URL}/${tech.apiId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        product = await res.json();
+      } else {
+        const res = await fetch(
+          `${DUMMY_SEARCH_URL}${encodeURIComponent(tech.title)}&limit=1`
+        );
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        product =
+          Array.isArray(data?.products) && data.products[0]
+            ? data.products[0]
+            : null;
+      }
+
+      const resources = Array.isArray(product?.images) ? product.images : [];
+      const merged = Array.from(
+        new Set([...(tech.resources || []), ...resources])
+      );
+
+      await updateTechnology(techId, {
+        resources: merged,
+        apiSource: "dummyjson",
+        apiId: product?.id ?? tech.apiId,
+      });
+    } catch (e) {
+      console.error(e);
+      throw new Error("Не удалось загрузить дополнительные ресурсы");
+    }
+  };
+
+  const searchByQueryGitHub = async (query, signal) => {
+    const q = String(query || "").trim();
+    if (!q) return [];
+
+    const url =
+      "https://api.github.com/search/repositories" +
+      `?q=${encodeURIComponent(
+        q
+      )}+in:name,description&sort=stars&order=desc&per_page=10`;
+
+    const headers = { Accept: "application/vnd.github+json" };
+
+    const token = import.meta.env?.VITE_GITHUB_TOKEN;
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const res = await fetch(url, { signal, headers });
+    if (!res.ok) {
+      let extra = "";
+      try {
+        const data = await res.json();
+        if (data?.message) extra = ` (${data.message})`;
+      } catch {}
+      throw new Error(`Ошибка GitHub API: ${res.status}${extra}`);
+    }
+
+    const data = await res.json();
+    const items = Array.isArray(data?.items) ? data.items : [];
+
+    return items.map((repo) => ({
+      apiSource: "github",
+      apiId: repo.id,
+      title: repo.name,
+      description: repo.description || "Нет описания",
+      category: "github",
+      resources: [repo.html_url],
+    }));
+  };
 
   return {
     technologies,
+    setTechnologies,
     loading,
     error,
-    refetch: searchTechnologies,
+    progress,
+    refetch,
     addTechnology,
     updateTechnology,
     deleteTechnology,
-    searchTechnologies,
-    setTechnologies,
+    loadAdditionalResources,
+    searchByQueryGitHub,
   };
 }
-
-export default useTechnologiesApi;

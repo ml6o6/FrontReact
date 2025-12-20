@@ -17,9 +17,6 @@ export default function Home({ technologies, isLoggedIn }) {
       <div className="page-header">
         <div>
           <h1 style={{ margin: 0 }}>Добро пожаловать!</h1>
-          <p style={{ margin: "6px 0 0", color: "#697086" }}>
-            Это SPA-приложение на React Router: страницы, параметры в URL и защищённые маршруты.
-          </p>
         </div>
 
         {isLoggedIn ? (

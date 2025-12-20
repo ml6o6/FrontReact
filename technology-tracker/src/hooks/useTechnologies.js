@@ -58,7 +58,10 @@ function calculateProgress(technologies) {
 }
 
 function nextId(technologies) {
-  const max = technologies.reduce((acc, t) => Math.max(acc, Number(t.id) || 0), 0);
+  const max = technologies.reduce(
+    (acc, t) => Math.max(acc, Number(t.id) || 0),
+    0
+  );
   return max + 1;
 }
 
@@ -113,14 +116,15 @@ export default function useTechnologies() {
   };
 
   const resetAllStatuses = () => {
-    setTechnologies((prev) => prev.map((t) => ({ ...t, status: "not-started" })));
+    setTechnologies((prev) =>
+      prev.map((t) => ({ ...t, status: "not-started" }))
+    );
   };
 
   const clearAllNotes = () => {
     setTechnologies((prev) => prev.map((t) => ({ ...t, notes: "" })));
   };
 
-  // Полный сброс данных к исходным (удобно для Настроек)
   const resetToInitial = () => {
     setTechnologies(initialTechnologies);
   };

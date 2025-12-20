@@ -1,40 +1,36 @@
-import "./ProgressBar.css";
+export default function ProgressBar({ value, progress }) {
+  const raw = typeof value === "number" ? value : progress;
 
-// Универсальный компонент прогресс-бара
-export default function ProgressBar({
-  progress,
-  label = "",
-  color = "#4CAF50",
-  height = 20,
-  showPercentage = true,
-  animated = false,
-}) {
-  const normalized = Math.min(100, Math.max(0, Number(progress) || 0));
+  const num = Number(raw);
+
+  const pct = Number.isFinite(num) ? Math.min(100, Math.max(0, num)) : 0;
 
   return (
-    <div className="progress-bar-container">
-      {(label || showPercentage) && (
-        <div className="progress-bar-header">
-          {label ? <span className="progress-label">{label}</span> : null}
-          {showPercentage ? (
-            <span className="progress-percentage">{normalized}%</span>
-          ) : null}
-        </div>
-      )}
+    <div className="page-card" style={{ marginTop: 12 }}>
+      <div
+        style={{ display: "flex", justifyContent: "space-between", gap: 12 }}
+      >
+        <strong>Прогресс</strong>
+        <span>{pct}%</span>
+      </div>
 
       <div
-        className="progress-bar-outer"
         style={{
-          height: `${height}px`,
-          borderRadius: `${Math.max(8, Math.round(height / 2))}px`,
+          marginTop: 10,
+          width: "100%",
+          height: 12,
+          borderRadius: 999,
+          background: "rgba(255,255,255,0.12)",
+          overflow: "hidden",
         }}
       >
         <div
-          className={`progress-bar-inner ${animated ? "animated" : ""}`}
           style={{
-            width: `${normalized}%`,
-            backgroundColor: color,
-            transition: animated ? "width 0.5s ease-in-out" : "none",
+            height: "100%",
+            width: `${pct}%`,
+            borderRadius: 999,
+            background: "rgba(255,255,255,0.5)",
+            transition: "width 250ms ease",
           }}
         />
       </div>

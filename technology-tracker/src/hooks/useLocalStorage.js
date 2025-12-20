@@ -1,9 +1,5 @@
 import { useState } from "react";
 
-/**
- * Кастомный хук для работы с localStorage.
- * Возвращает [value, setValue] как useState, но с синхронизацией в localStorage.
- */
 export default function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(() => {
     try {

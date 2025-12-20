@@ -18,7 +18,6 @@ export default function QuickActions({
   }, [technologies]);
 
   const handleExport = () => {
-    // По методичке достаточно вывести данные в консоль
     console.log("Данные для экспорта:", exportJson);
     setShowExportModal(true);
   };

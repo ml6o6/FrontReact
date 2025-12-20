@@ -1,8 +1,6 @@
 :root {
   color-scheme: light;
 }
-
-/* Fix: чтобы элементы с width:100% не вылезали из контейнеров */
 *,
 *::before,
 *::after {
