@@ -1,37 +1,93 @@
-import "./TechnologyCard.css";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Box from "@mui/material/Box";
 
-const STATUS_META = {
-  "not-started": { label: "Не начато", icon: "🕒" },
-  "in-progress": { label: "В процессе", icon: "⏳" },
-  completed: { label: "Выполнено", icon: "✅" },
-};
+function getStatusColor(status) {
+  switch (status) {
+    case "completed":
+      return "success";
+    case "in-progress":
+      return "warning";
+    default:
+      return "default";
+  }
+}
+
+function getStatusText(status) {
+  switch (status) {
+    case "completed":
+      return "Выполнено";
+    case "in-progress":
+      return "В процессе";
+    default:
+      return "Не начато";
+  }
+}
 
 export default function TechnologyCard({ technology, onOpen }) {
-  const meta = STATUS_META[technology.status] ?? {
-    label: "Неизвестно",
-    icon: "❔",
-  };
-
+  const tech = technology || {};
   return (
-    <button
-      type="button"
-      className={["tech-card", `tech-card--${technology.status}`].join(" ")}
-      onClick={() => onOpen?.(technology)}
-      aria-label={`Открыть: ${technology.title}`}
+    <Card
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+      onClick={onOpen}
+      role={onOpen ? "button" : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (!onOpen) return;
+        if (e.key === "Enter" || e.key === " ") onOpen();
+      }}
     >
-      <header className="tech-card__header">
-        <h3 className="tech-card__title">{technology.title}</h3>
-        <span className="tech-card__status">
-          {meta.icon} {meta.label}
-        </span>
-      </header>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="h3" gutterBottom>
+          {tech.title}
+        </Typography>
 
-      <p className="tech-card__description">{technology.description}</p>
+        {tech.description ? (
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            {tech.description}
+          </Typography>
+        ) : null}
 
-      <div className="tech-card__footer">
-        <span className="tech-card__category">{technology.category}</span>
-        <span className="tech-card__hint">Открыть карточку</span>
-      </div>
-    </button>
+        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+          <Chip
+            label={tech.category || "other"}
+            variant="outlined"
+            size="small"
+          />
+          <Chip
+            label={getStatusText(tech.status)}
+            color={getStatusColor(tech.status)}
+            size="small"
+          />
+          {tech.difficulty ? (
+            <Chip label={tech.difficulty} size="small" />
+          ) : null}
+          {tech.deadline ? (
+            <Chip label={`до ${tech.deadline}`} size="small" />
+          ) : null}
+        </Box>
+      </CardContent>
+
+      <CardActions sx={{ justifyContent: "flex-end" }}>
+        <Button
+          size="small"
+          variant="outlined"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen?.();
+          }}
+        >
+          Открыть
+        </Button>
+      </CardActions>
+    </Card>
   );
 }

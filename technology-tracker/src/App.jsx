@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
+import { useUi } from "./theme/UiContext.jsx";
 
 import useTechnologiesApi from "./hooks/useTechnologiesApi.js";
 
@@ -17,6 +18,7 @@ import AddTechnology from "./pages/AddTechnology";
 import NotFound from "./pages/NotFound";
 
 export default function App() {
+  const { notify } = useUi();
   const {
     technologies,
     loading,
@@ -43,6 +45,7 @@ export default function App() {
   const handleLogin = (user) => {
     setIsLoggedIn(true);
     setUsername(user || "");
+    notify(`Добро пожаловать, ${user || "user"}!`, "success");
   };
 
   const handleLogout = () => {
@@ -50,6 +53,7 @@ export default function App() {
     localStorage.removeItem("username");
     setIsLoggedIn(false);
     setUsername("");
+    notify("Вы вышли из аккаунта", "info");
   };
 
   const onStatusChange = async (techId, value) => {
@@ -72,6 +76,7 @@ export default function App() {
       await updateTechnology(techId, updates);
     } catch (e) {
       console.error(e);
+      notify("Не удалось обновить статус технологии", "error");
     }
   };
 
@@ -80,6 +85,7 @@ export default function App() {
       await updateTechnology(techId, { notes });
     } catch (e) {
       console.error(e);
+      notify("Не удалось сохранить заметки", "error");
     }
   };
 
@@ -140,10 +146,12 @@ export default function App() {
       }
     } catch (e) {
       console.error(e);
+      notify("Ошибка массового обновления", "error");
     }
   };
 
   const handleImportTechnologies = (importedTechnologies) => {
+    notify("Импорт выполнен", "success");
     const incoming = Array.isArray(importedTechnologies)
       ? importedTechnologies
       : [];

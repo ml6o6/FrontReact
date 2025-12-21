@@ -33,9 +33,6 @@ export default function QuickActions({
         <button onClick={onResetAll} className="btn btn-warning">
           🔄 Сбросить все статусы
         </button>
-        <button onClick={handleExport} className="btn btn-info">
-          📤 Экспорт данных
-        </button>
       </div>
 
       <Modal

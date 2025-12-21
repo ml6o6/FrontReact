@@ -13,7 +13,9 @@ export default function DataImporter({ onImport }) {
 
     data.technologies.forEach((tech, index) => {
       if (!tech?.title || !tech?.description) {
-        throw new Error(`Технология #${index + 1}: отсутствует название или описание`);
+        throw new Error(
+          `Технология #${index + 1}: отсутствует название или описание`
+        );
       }
       if (String(tech.title).length > 50) {
         throw new Error(`Технология "${tech.title}": название слишком длинное`);
@@ -61,7 +63,6 @@ export default function DataImporter({ onImport }) {
     reader.onerror = () => setImportError("Ошибка чтения файла");
     reader.readAsText(file);
 
-    // Сбрасываем input чтобы можно было выбрать тот же файл снова
     if (inputRef.current) inputRef.current.value = "";
   };
 

@@ -49,3 +49,26 @@
   margin: 10px 0 0;
   color: #4a5161;
 }
+
+/* DARK THEME */
+[data-theme="dark"] .progress-header {
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .progress-header__title {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .progress-header__stats {
+  color: rgba(229, 231, 235, 0.9);
+}
+
+[data-theme="dark"] .progress-header__hint {
+  color: rgba(229, 231, 235, 0.85);
+}
+
+[data-theme="dark"] .progress-bar {
+  background: rgba(255, 255, 255, 0.12);
+}

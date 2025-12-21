@@ -16,8 +16,10 @@
 }
 
 .nav-brand h2 {
-  margin: 0;
-  font-size: 1.1rem;
+  color: #111827;
+}
+[data-theme="dark"] .nav-brand h2 {
+  color: #e5e7eb;
 }
 
 .nav-menu {
@@ -65,4 +67,35 @@
 .nav-logout {
   border: 1px solid #e7e7ee !important;
   background: #fff !important;
+}
+
+/* DARK THEME: панель навигации */
+[data-theme="dark"] .main-navigation {
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .nav-brand h2 {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .nav-menu a,
+[data-theme="dark"] .nav-menu button {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .nav-menu a.active {
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(37, 99, 235, 0.3);
+}
+
+[data-theme="dark"] .nav-user {
+  color: rgba(229, 231, 235, 0.85);
+}
+
+[data-theme="dark"] .nav-logout {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #e5e7eb !important;
 }

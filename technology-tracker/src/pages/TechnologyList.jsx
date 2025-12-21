@@ -123,13 +123,11 @@ export default function TechnologyList({
         </div>
       ) : null}
 
-      {/* Импорт дорожной карты */}
       <div className="page-card" style={{ marginBottom: 12 }}>
         <h3 style={{ marginTop: 0 }}>Импорт дорожной карты</h3>
         <RoadmapImporter addTechnology={onImportAdd} />
       </div>
 
-      {/* Поиск по API (debounce + отмена) */}
       <div className="page-card" style={{ marginBottom: 12 }}>
         <h3 style={{ marginTop: 0 }}>Поиск</h3>
 
@@ -142,8 +140,6 @@ export default function TechnologyList({
               placeholder="Поиск по API (например: react...)"
               style={{ width: "100%", paddingRight: 40 }}
             />
-
-            {/* индикатор загрузки НЕ сдвигает поле */}
             <span
               style={{
                 position: "absolute",

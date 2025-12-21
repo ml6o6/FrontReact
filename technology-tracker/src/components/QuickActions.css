@@ -61,3 +61,43 @@
   font-size: 0.9rem;
   resize: vertical;
 }
+
+/* DARK THEME (как Navigation.css) */
+[data-theme="dark"] .quick-actions {
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .quick-actions__title {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .quick-actions .btn {
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .quick-actions .btn:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="dark"] .quick-actions .btn-success {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.22);
+}
+[data-theme="dark"] .quick-actions .btn-warning {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.22);
+}
+[data-theme="dark"] .quick-actions .btn-info {
+  background: rgba(37, 99, 235, 0.16);
+  border-color: rgba(37, 99, 235, 0.26);
+}
+
+[data-theme="dark"] .quick-actions .export-details textarea {
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #e5e7eb;
+}
