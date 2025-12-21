@@ -118,6 +118,67 @@ export default function App() {
   ).length;
   const progress = total === 0 ? 0 : Math.round((completed / total) * 100);
 
+  const bulkUpdate = async (updates) => {
+    const nextUpdates = {};
+    if (updates?.status) {
+      nextUpdates.status = updates.status;
+      nextUpdates.progress =
+        updates.status === "completed"
+          ? 100
+          : updates.status === "in-progress"
+          ? 50
+          : 0;
+    }
+    if (typeof updates?.deadline === "string") {
+      nextUpdates.deadline = updates.deadline;
+    }
+
+    try {
+      const list = Array.isArray(technologies) ? technologies : [];
+      for (const t of list) {
+        await updateTechnology(t.id, nextUpdates);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleImportTechnologies = (importedTechnologies) => {
+    const incoming = Array.isArray(importedTechnologies)
+      ? importedTechnologies
+      : [];
+    setTechnologies((prev) => {
+      const existing = Array.isArray(prev) ? prev : [];
+      const existingIds = new Set(existing.map((t) => t.id));
+      const normalized = incoming.map((t) => {
+        const rawId = t?.id;
+        const id =
+          rawId && !existingIds.has(rawId)
+            ? rawId
+            : Date.now() + Math.floor(Math.random() * 100000);
+        return {
+          id,
+          title: String(t?.title ?? "").trim() || "Без названия",
+          description: String(t?.description ?? "").trim(),
+          category: String(t?.category ?? "other").trim() || "other",
+          status: t?.status ?? "not-started",
+          notes: t?.notes ?? "",
+          resources: Array.isArray(t?.resources) ? t.resources : [],
+          difficulty: t?.difficulty ?? "beginner",
+          deadline: t?.deadline ?? "",
+          createdAt: t?.createdAt ?? new Date().toISOString(),
+        };
+      });
+      const fingerprint = new Set(
+        existing.map((t) => `${t.title}__${t.description}`)
+      );
+      const toAdd = normalized.filter(
+        (t) => !fingerprint.has(`${t.title}__${t.description}`)
+      );
+      return [...existing, ...toAdd];
+    });
+  };
+
   return (
     <div className="app">
       <Navigation
@@ -190,6 +251,7 @@ export default function App() {
           path="/settings"
           element={
             <ProtectedRoute isLoggedIn={isLoggedIn}>
+              {" "}
               <Settings
                 isLoggedIn={isLoggedIn}
                 username={username}
@@ -198,6 +260,9 @@ export default function App() {
                 onResetAll={resetAllStatuses}
                 onClearAllNotes={clearAllNotes}
                 onResetData={resetToInitial}
+                technologies={technologies}
+                onImportTechnologies={handleImportTechnologies}
+                onBulkUpdate={bulkUpdate}
               />
             </ProtectedRoute>
           }

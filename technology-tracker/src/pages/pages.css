@@ -53,3 +53,9 @@
 .form-group{display:grid;gap:6px;}
 .form-group label{color:#4a5166;font-size:.95rem;}
 .form-group input, .form-group textarea{padding:10px 12px;border-radius:12px;border:1px solid #e7e7ee;font:inherit;}
+
+
+/* Practice 25: form validation */
+.required::after{content:" *";color:#d64545;}
+.error{border-color:#d64545 !important;}
+.error-message{color:#d64545;font-size:.9rem;}
